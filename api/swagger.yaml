@@ -1,0 +1,137 @@
+---
+swagger: "2.0"
+info:
+  description: "This is a basic API for our little game."
+  version: "0.0.1"
+  title: "A game"
+host: "example.com"
+basePath: "/v2"
+tags:
+  - name: "book"
+    description: "A book is what the game needs!"
+  - name: "chapter"
+    description: "Chapters are parts of books. The define pages within them."
+  - name: "page"
+    description: "Pages includes text or object to view and actions to take"
+  - name: "action"
+    description: "Actions enables the user to get to different pages and also changes his stats"
+  - name: "stat"
+    description: "An object that contains name and value, can be used in the story to block playes from taking actions and more."
+  - name: "player"
+    description: "A player is an object that plays a spesific Book."
+  - name: "user"
+    description: "Users have players. A user can use his players to play books"
+schemes:
+  - "http"
+paths:
+  /book:
+    post:
+      tags:
+        - "book"
+      summary: "Add a new book to the store"
+      description: "NEEDS CHANGE!!!"
+      operationId: "addBook"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Book object that needs to be added to the store"
+          required: true
+          schema:
+            $ref: "#/definitions/Book"
+      responses:
+        405:
+          description: "Invalid input"
+      security:
+        - ourgame_auth:
+          - "write:books"
+          - "read:books"
+      x-swagger-router-controller: "Books"
+    put:
+      tags:
+        - "book"
+      summary: "Update an existing book"
+      description: "NEEDS CHANGE!!!"
+      operationId: "updateBook"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Book object that needs to be updated in the store"
+          required: true
+          schema:
+            $ref: "#/definitions/Book"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Book not found"
+        405:
+          description: "Validation exception"
+      security:
+        - ourgame_auth:
+          - "write:books"
+          - "read:books"
+      x-swagger-router-controller: "Books"
+  /book/{bookId}:  
+    get:
+      tags:
+        - "book"
+      summary: "Get a book"
+      description: "Get a book with all it's content"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: bookId
+          schema:
+            type:
+              "string"
+            required: ture
+            description: "The ID of the book"
+      example:
+        bookId: "XXX-000-XX0-000"
+
+securityDefinitions:
+  ourgame_auth:
+    type: "oauth2"
+    authorizationUrl: "http://example.com"
+    flow: "implicit"
+    scopes:
+      write:books: "modify books in your account"
+      read:books: "read your books"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  Book:
+    type: "object"
+    required:
+      - "name"
+      - "numOfPages"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+        example: "Master of Oded"
+      numOfPages:
+        type: "integer"
+        format: "int64"
+    example:
+      numOfPages: 214
+      name: "Master of Oded"
+      id: 0
+    xml:
+      name: "Book"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
